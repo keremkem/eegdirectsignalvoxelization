@@ -19,9 +19,9 @@ from scipy.spatial.distance import cdist
 warnings.filterwarnings('ignore')
 
 # === PARAMETRELER === #
-data_path = r"C:\Users\kerem\Downloads\eegyedek"
-eeg_mat = os.path.join(data_path, "S02_restingPre_EC.mat")
-coord_file = os.path.join(data_path, "kanalkoordinatlarson.txt")
+data_path = r"Set Path Here"
+eeg_mat = os.path.join(data_path, "Set EEG file as *.mat")
+coord_file = os.path.join(data_path, "channel coordinations table fulfilled txt file with chanell name and x,y,z coordinates suitable with mni")
 fs = 256
 segment_duration = 2.0
 segment_samples = int(fs * segment_duration)
@@ -33,17 +33,17 @@ bands = {
     "gamma": (30, 45)
 }
 n_bins = 6
-sigma = 20 # 10-10 sistemi için uygun spatial yayılım (mm)
-MIN_CHANNEL_DISTANCE = 10  # Minimum kanal mesafesi (mm)
-MAX_CHANNEL_DISTANCE = 150  # Maximum kanal mesafesi (mm)
-# EEG için optimize edilmiş ağırlıklar
-MI_WEIGHT = 0.2  # Daha da düşür
-DICE_WEIGHT = 0.8  # Spatial pattern çok önemli  # EEG için uygun spatial yayılım - DÜŞÜRÜLDÜ
+sigma = 20 
+MIN_CHANNEL_DISTANCE = 10  
+MAX_CHANNEL_DISTANCE = 150  
+
+MI_WEIGHT = 0.2  
+DICE_WEIGHT = 0.8  
 grid_spacing = 1.5  
 batch_size = 5000
 n_jobs = min(12, cpu_count())
 
-# Atlas seçenekleri
+# Atlas Options
 USE_BRAIN_MASK = True
 USE_HARVARD_OXFORD = False
 USE_TISSUE_TYPE = False
@@ -52,38 +52,34 @@ CREATE_CONN_OUTPUT = True
 ROI_BASED_ANALYSIS = True
 USE_SURFACE_PROJECTION = True
 
-# Surface projection için parametreler
+# Parameters for Surface Projection 
 SURFACE_PROJECTION_METHOD = "enhanced"
 USE_CORTICAL_RIBBON = True
 SURFACE_SMOOTHING_FACTOR = 1.5
 
-# Post-processing parametreleri
+# Post-processing parameters
 APPLY_THRESHOLD = True
-THRESHOLD_PERCENTILE = 70  # DÜŞÜRÜLDÜ
+THRESHOLD_PERCENTILE = 70 
 APPLY_SMOOTHING = True
-SMOOTHING_SIGMA = 0.8  # DÜŞÜRÜLDÜ
+SMOOTHING_SIGMA = 0.8  
 APPLY_ZSCORE = True
 ENFORCE_BRAIN_BOUNDS = True 
 APPLY_MORPHOLOGICAL_OPERATIONS = False 
 
 
-# Hybrid score parametreleri - EEG için optimize
+# Hybrid score parameters
 USE_ADAPTIVE_WEIGHTS = True
 SPATIAL_PRIOR_WEIGHT = 0.0
-MI_WEIGHT = 0.25  # DÜŞÜRÜLDÜ
-DICE_WEIGHT = 0.75  # ARTIRILDI - Spatial pattern daha önemli
-
-# YENİ PARAMETRE
-SUPPRESS_DEEP_ACTIVITY = False  # Derin beyin aktivitelerini bastır
+MI_WEIGHT = 0.25  
+DICE_WEIGHT = 0.75 
+SUPPRESS_DEEP_ACTIVITY = False 
 
 # === LOGGING === #
 def log(msg):
     now = datetime.now().strftime("%H:%M:%S")
     print(f"[{now}] {msg}")
 
-# === YENİ - KOORDİNAT DOĞRULAMA FONKSİYONU === #
 def validate_and_transform_coords(coord_file):
-    """Kanal koordinatlarını kontrol et ve dönüştür - 10-20 sisteminden MNI'ya"""
     coords = {}
     with open(coord_file, 'r') as f:
         for line in f:
@@ -91,25 +87,20 @@ def validate_and_transform_coords(coord_file):
             if len(parts) == 4:
                 name, x, y, z = parts
                 x, y, z = float(x), float(y), float(z)
-                
-                # Koordinatlar zaten mm cinsinden, 10 ile ÇARPMA!
-                # Sadece z koordinatını yukarı kaydır (EEG kafatası yüzeyinde)
+
                 z += 20  # -3 olan kanallar +17'ye gelir
                 
                 coords[name] = np.array([x, y, z])
-    
-    # Koordinatları kontrol et
+				
     positions = np.array(list(coords.values()))
     log(f"Kanal koordinat aralığı (düzeltilmiş):")
     log(f"  X: [{positions[:,0].min():.1f}, {positions[:,0].max():.1f}]")
     log(f"  Y: [{positions[:,1].min():.1f}, {positions[:,1].max():.1f}]")
     log(f"  Z: [{positions[:,2].min():.1f}, {positions[:,2].max():.1f}]")
     
-    # Ortalama yarıçap hesapla
     radii = np.sqrt(np.sum(positions**2, axis=1))
     log(f"  Ortalama yarıçap: {radii.mean():.1f}mm (min: {radii.min():.1f}, max: {radii.max():.1f})")
     
-    # Örnek kanalları göster
     if 'Cz' in coords:
         log(f"  Cz: {coords['Cz']}")
     if 'Fpz' in coords:
@@ -119,29 +110,24 @@ def validate_and_transform_coords(coord_file):
     
     return coords
 
-# === POST-PROCESSING FONKSİYONLARI === #
 def apply_threshold(data, percentile=85):
-    """Threshold uygula - düşük değerleri sıfırla"""
     threshold = np.percentile(data[data > 0], percentile)
     data_thresholded = data.copy()
     data_thresholded[data_thresholded < threshold] = 0
     return data_thresholded
 
 def apply_spatial_smoothing(data, sigma=0.5):
-    """Hafif spatial smoothing uygula"""
     smoothed = np.zeros_like(data)
     for t in range(data.shape[3]):
         smoothed[:,:,:,t] = gaussian_filter(data[:,:,:,t], sigma=sigma)
     return smoothed
     
 def apply_morphological_operations(data, kernel_size=3):
-    """Morfolojik işlemlerle gürültü temizleme"""
     from scipy.ndimage import binary_opening, binary_closing, binary_dilation
     
     cleaned_data = np.zeros_like(data)
     
     for t in range(data.shape[3]):
-        # Binary mask oluştur
         slice_data = data[:,:,:,t]
         threshold = np.percentile(slice_data[slice_data > 0], 30)
         binary_mask = slice_data > threshold
@@ -151,7 +137,7 @@ def apply_morphological_operations(data, kernel_size=3):
         binary_mask = binary_closing(binary_mask, iterations=1)
         binary_mask = binary_dilation(binary_mask, iterations=1)
         
-        # Mask uygula
+        # Apply Mask
         cleaned_data[:,:,:,t] = slice_data * binary_mask
     
     return cleaned_data
@@ -165,10 +151,10 @@ def apply_bilateral_filter(data, spatial_sigma=2.0, intensity_sigma=0.1):
     for t in range(data.shape[3]):
         slice_data = data[:,:,:,t]
         
-        # Basit bilateral yaklaşım
+        # Simple Bilateral Approach
         smoothed = gaussian_filter(slice_data, sigma=spatial_sigma)
         
-        # Intensity difference'a göre ağırlıklandır
+        # Weight by Intensity difference
         diff = np.abs(slice_data - smoothed)
         weight = np.exp(-diff**2 / (2 * intensity_sigma**2))
         
@@ -177,7 +163,7 @@ def apply_bilateral_filter(data, spatial_sigma=2.0, intensity_sigma=0.1):
     return filtered_data
 
 def apply_zscore_normalization(data):
-    """Her zaman noktası için z-score normalizasyonu"""
+    """z-score normalization for every segment"""
     normalized = np.zeros_like(data)
     for t in range(data.shape[3]):
         slice_data = data[:,:,:,t]
@@ -191,11 +177,11 @@ def apply_zscore_normalization(data):
     return normalized
 
 def compute_temporal_stability(data):
-    """Her voxel için temporal stabilite hesapla"""
+    """Calculate temporal stability for every voxel"""
     mask = data[:,:,:,0] != 0
     stability = np.zeros(data.shape[:3])
     
-    # Aktif voxeller için temporal varyasyon katsayısı
+    # Temporal variation coefficient for active voxels
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
             for k in range(data.shape[2]):
@@ -208,15 +194,15 @@ def compute_temporal_stability(data):
     
     return stability
 def compute_and_save_roi_centers(voxel_coords, region_ids, all_labels, output_path, band_name):
-    """ROI merkez koordinatlarını hesaplar ve numpy dosyasına kaydeder"""
+  
     
-    log("ROI merkez koordinatları hesaplanıyor...")
+    log("Calculating ROI center coordinates...")
     
     unique_regions = np.unique(region_ids)
     roi_centers_dict = {}
     roi_centers_list = []
     
-    # Derin yapıları filtrele (opsiyonel)
+    # Filter deep structures (opsiyonel)
     deep_structures = ['Thalamus', 'Putamen', 'Pallidum', 'Caudate', 'Accumbens', 
                       'Hippocampus', 'Amygdala', 'Brain-Stem']
     
@@ -232,17 +218,17 @@ def compute_and_save_roi_centers(voxel_coords, region_ids, all_labels, output_pa
             region_voxels = np.array(voxel_coords)[mask]
             
             if len(region_voxels) > 0:
-                # Merkez koordinatı hesapla (MNI koordinatlarında)
+                # Calculate center coordinates (MNI coordinates)
                 roi_center = np.mean(region_voxels, axis=0)
                 
-                # Dictionary'e ekle
+                # Add to Dictionary
                 roi_centers_dict[f"r{region_id:03d}"] = {
                     'region_name': region_name,
                     'center_mni': roi_center,
                     'n_voxels': len(region_voxels)
                 }
                 
-                # Liste formatında da sakla
+                # Save as a list
                 roi_centers_list.append([
                     region_id,
                     region_name,
@@ -252,16 +238,16 @@ def compute_and_save_roi_centers(voxel_coords, region_ids, all_labels, output_pa
                     len(region_voxels)
                 ])
     
-    # Numpy array olarak kaydet
+    # Save as a nump array
     roi_centers_array = np.array(roi_centers_list, dtype=object)
     
-    # Ana ROI centers dosyası
+    # Main ROI centers file
     roi_centers_file = os.path.join(output_path, f"{band_name}_roi_centers.npy")
     np.save(roi_centers_file, roi_centers_array)
     log(f"ROI merkez koordinatları kaydedildi: {roi_centers_file}")
     log(f"  Toplam ROI sayısı: {len(roi_centers_list)}")
     
-    # Ayrıca sadece koordinatları içeren basit bir array
+    # A simple array for only coordinates 
     centers_only = np.array([[item[2], item[3], item[4]] for item in roi_centers_list])
     centers_only_file = os.path.join(output_path, f"{band_name}_roi_centers_coords_only.npy")
     np.save(centers_only_file, centers_only)
@@ -278,7 +264,7 @@ def compute_and_save_roi_centers(voxel_coords, region_ids, all_labels, output_pa
     scipy.io.savemat(mat_file, mat_data)
     log(f"ROI merkezleri MATLAB formatında da kaydedildi: {mat_file}")
     
-    # En büyük 10 ROI'yi göster
+    # Show biggest 10 ROI's
     sorted_rois = sorted(roi_centers_list, key=lambda x: x[5], reverse=True)[:10]
     log("\nEn büyük 10 ROI:")
     for roi in sorted_rois:
@@ -287,7 +273,7 @@ def compute_and_save_roi_centers(voxel_coords, region_ids, all_labels, output_pa
     return roi_centers_dict, centers_only
 
 def adaptive_hybrid_scoring(mi_scores, dice_scores, temporal_stability=None):
-    """Adaptive ağırlıklandırma ile hibrit skor hesapla"""
+    """Calculate hybrid score with adaptive weighting """
     if temporal_stability is not None and USE_ADAPTIVE_WEIGHTS:
         # Temporal stabiliteye göre ağırlıkları ayarla
         stability_weight = temporal_stability / (temporal_stability + 1)
@@ -299,45 +285,45 @@ def adaptive_hybrid_scoring(mi_scores, dice_scores, temporal_stability=None):
                  dice_weight[:, np.newaxis] * dice_scores + 
                  stability_contribution[:, np.newaxis])
     else:
-        # Basit ağırlıklandırma
+        # Simple Weighting
         hybrid = MI_WEIGHT * mi_scores + DICE_WEIGHT * dice_scores
     
     return hybrid
 def suppress_deep_brain_activity(data, affine, suppression_threshold=50):
-    """Derin beyin aktivitelerini daha agresif bastır"""
-    log("Derin beyin aktiviteleri bastırılıyor...")
+    """Supress deep brain activities more agressive"""
+    log("Supressing Deep Brain Activity...")
     suppressed = data.copy()
     
     for x in range(data.shape[0]):
         for y in range(data.shape[1]):
             for z in range(data.shape[2]):
-                # Voxel'in MNI koordinatını hesapla
+                # Calculate voxel's MNI coordinates
                 voxel_idx = np.array([x, y, z, 1])
                 mni_coord = affine @ voxel_idx
                 
-                # Z koordinatına göre bastır
+                # Supress by z coordinates
                 z_coord = mni_coord[2]
                 
-                # Çok katı Z-bazlı bastırma
-                if z_coord < -10:  # Kulak seviyesinin altı
-                    suppressed[x, y, z, :] = 0  # Tamamen sıfırla
-                elif z_coord < 10:  # Düşük seviye
+                # Multiple layers z coordinates supress
+                if z_coord < -10:  # under ear level
+                    suppressed[x, y, z, :] = 0  # Totally zero
+                elif z_coord < 10:  # low level
                     suppressed[x, y, z, :] *= 0.3
-                elif z_coord < 30:  # Orta seviye
+                elif z_coord < 30:  # Mid level
                     suppressed[x, y, z, :] *= 0.6
                 
-                # Y koordinatına göre de kontrol (çok ön veya arka)
+                # control with y coordinates ( too front or too rear)
                 y_coord = mni_coord[1]
-                if abs(y_coord) > 70:  # Çok ön veya arka
+                if abs(y_coord) > 70:  
                     suppressed[x, y, z, :] *= 0.8
                 
-                # Merkezden uzaklık kontrolü
+                # control for distnace from center
                 radius = np.linalg.norm(mni_coord[:3])
-                if radius < 50:  # Çok derin
+                if radius < 50:  
                     suppressed[x, y, z, :] *= 0.1
     
     return suppressed
-# === YARDIMCI FONKSİYONLAR === #
+# === Helper Functions === #
 def bandpass(data, fs, low, high):
     b, a = butter(4, [low / (fs / 2), high / (fs / 2)], btype='band')
     return filtfilt(b, a, data, axis=1)
@@ -352,19 +338,18 @@ def hilbert_envelope(segment, band, fs):
     return np.abs(analytic).mean(axis=1)
 
 def create_voxel_grid(x_range, y_range, z_range, spacing):
-    """MNI uzayında voxel grid oluştur"""
+    """Create Voxel Grid in MNI Space"""
     xs = np.arange(x_range[0], x_range[1], spacing)
     ys = np.arange(y_range[0], y_range[1], spacing)
     zs = np.arange(z_range[0], z_range[1], spacing)
     grid = np.array(np.meshgrid(xs, ys, zs, indexing='ij'))
     coords = grid.reshape(3, -1).T
     shape = (len(xs), len(ys), len(zs))
-    log(f"Grid boyutu: {shape}, Toplam voxel: {len(coords)}")
+    log(f"Grid boyutu: {shape}, Total voxel: {len(coords)}")
     return coords, shape
 
 def filter_white_matter_from_labels(voxel_labels, region_ids):
-    """Harvard-Oxford etiketlerinden white matter ve ilgili yapıları çıkar"""
-    # Çıkarılacak anahtar kelimeler - daha kapsamlı liste
+    """Discard white matter and related parts from Harvard-Oxford labels """
     exclude_keywords = [
         'White Matter',
         'Ventricle', 
@@ -385,16 +370,16 @@ def filter_white_matter_from_labels(voxel_labels, region_ids):
     excluded_regions = []
     
     for i, label in enumerate(voxel_labels):
-        # Case-insensitive karşılaştırma
+        # Case-insensitive compairment
         if not any(keyword.lower() in label.lower() for keyword in exclude_keywords):
             keep_indices.append(i)
         else:
             if label not in excluded_regions:
                 excluded_regions.append(label)
     
-    # Hangi bölgelerin çıkarıldığını logla
+    # Log which areas excluded
     if excluded_regions:
-        log("Çıkarılan bölgeler:")
+        log("Excluded Regions:")
         for region in excluded_regions:
             log(f"  - {region}")
     
@@ -406,13 +391,13 @@ def apply_gray_matter_mask(voxel_coords, voxel_labels, valid_indices=None):
     """White matter filtreleme wrapper"""
     log("Gray matter filtreleme uygulanıyor...")
     
-    # White matter ve ventricle'ları filtrele
+    # Filter White matter and ventricles
     keep_indices = filter_white_matter_from_labels(voxel_labels, None)
     
-    # Koordinatları filtrele
+    # Filter Coordinates
     gray_voxels = voxel_coords[keep_indices]
     
-    # Valid indices varsa güncelle
+    # Update if Valid indices occur 
     if valid_indices is not None:
         gray_indices = valid_indices[keep_indices]
     else:
@@ -423,7 +408,7 @@ def apply_gray_matter_mask(voxel_coords, voxel_labels, valid_indices=None):
     return gray_voxels, gray_indices
     
 def fix_affine_for_harvard_oxford(atlas_img):
-    """Harvard-Oxford atlas için affine düzeltme"""
+    """fix affine for Harvard-Oxford atlas"""
     affine = atlas_img.affine.copy()
     if np.any(np.abs(affine[:3, :3] - np.diag([2, 2, 2])) > 1e-3):
         fixed_affine = np.array([
@@ -435,21 +420,21 @@ def fix_affine_for_harvard_oxford(atlas_img):
         fixed_img = nib.Nifti1Image(atlas_img.get_fdata(), affine=fixed_affine)
         return fixed_img
     return atlas_img
-# === DÜZELTİLMİŞ SURFACE PROJECTION FONKSİYONLARI === #
+# === Corrected SURFACE PROJECTION Functions === #
 def enhanced_surface_projection_fixed(band_envelope, channel_coords):
-    """Düzeltilmiş enhanced surface projection"""
-    log("Enhanced surface projection başlıyor...")
+    """Corrected enhanced surface projection"""
+    log("Starting Enhanced surface projection ...")
     
-    # Surface yükle
+    # Install Surface 
     fsaverage = datasets.fetch_surf_fsaverage('fsaverage5')
     
-    # Pial ve white matter yükle
+    # Install Pial and white matter 
     lh_pial, _ = surface.load_surf_mesh(fsaverage['pial_left'])
     rh_pial, _ = surface.load_surf_mesh(fsaverage['pial_right'])
     lh_white, _ = surface.load_surf_mesh(fsaverage['white_left'])
     rh_white, _ = surface.load_surf_mesh(fsaverage['white_right'])
     
-    # Mid-surface hesapla
+    # Calculate Mid-surface 
     lh_mid = (lh_pial + lh_white) / 2
     rh_mid = (rh_pial + rh_white) / 2
     
@@ -499,7 +484,7 @@ def enhanced_surface_projection_fixed(band_envelope, channel_coords):
         if np.any(valid_rows):
             weights[valid_rows] = weights[valid_rows] / row_sums[valid_rows]
         
-        # Projeksiyon
+        # Projection
         surface_data[v_start:v_end, :] = weights @ band_envelope
     
     return (surface_data, all_vertices, len(lh_mid), 
@@ -508,12 +493,12 @@ def enhanced_surface_projection_fixed(band_envelope, channel_coords):
 def improved_surface_to_volume_fixed(surface_data, vertices, pial_lh, pial_rh, 
                                    white_lh, white_rh, n_lh,
                                    volume_shape=(91, 109, 91), grid_spacing=2):
-    """Düzeltilmiş cortical ribbon filling"""
-    log("Cortical ribbon filling başlıyor...")
+    """Corrected cortical ribbon filling"""
+    log("Starting Cortical ribbon filling...")
     
     volume_4d = np.zeros((*volume_shape, surface_data.shape[1]))
     
-    # MNI152 standart affine - düzeltilmiş
+    # MNI152 standart affine 
     affine = np.array([
         [-2, 0, 0, 90],      # X flip for neurological convention
         [0, 2, 0, -126], 
@@ -523,14 +508,13 @@ def improved_surface_to_volume_fixed(surface_data, vertices, pial_lh, pial_rh,
     
     inv_affine = np.linalg.inv(affine)
     
-    # Sol hemisphere için ribbon filling
+    # ribbon filling for left hemisphere
     for v_idx in tqdm(range(n_lh), desc="LH ribbon"):
-        # Cortical ribbon boyunca daha fazla nokta
         for alpha in np.linspace(0, 1, 10):
-            # Pial'dan white matter'a interpolasyon
+            # Interpolation from pial to white matter
             point = pial_lh[v_idx] * (1 - alpha) + white_lh[v_idx] * alpha
             
-            # MNI koordinatını voxel indeksine çevir
+            # Turn voxel index to MNI coordinates
             vox_float = inv_affine[:3, :3] @ point + inv_affine[:3, 3]
             vox = np.round(vox_float).astype(int)
             
@@ -538,7 +522,7 @@ def improved_surface_to_volume_fixed(surface_data, vertices, pial_lh, pial_rh,
                 0 <= vox[1] < volume_shape[1] and
                 0 <= vox[2] < volume_shape[2]):
                 
-                # Komşu voxellere de yay (3x3x3 kernel)
+                # (3x3x3 kernel)
                 for dx in [-1, 0, 1]:
                     for dy in [-1, 0, 1]:
                         for dz in [-1, 0, 1]:
@@ -549,13 +533,13 @@ def improved_surface_to_volume_fixed(surface_data, vertices, pial_lh, pial_rh,
                                 # Distance-based weighting
                                 dist = np.sqrt(dx**2 + dy**2 + dz**2)
                                 weight = np.exp(-dist/1.5)
-                                # Maximum değeri al (overwrite yerine)
+                                # Get Maximum (not overwrite )
                                 volume_4d[x, y, z, :] = np.maximum(
                                     volume_4d[x, y, z, :],
                                     surface_data[v_idx, :] * weight
                                 )
     
-    # Sağ hemisphere için ribbon filling
+    #  ribbon filling for right hemisphere
     for v_idx in tqdm(range(len(pial_rh)), desc="RH ribbon"):
         for alpha in np.linspace(0, 1, 10):
             point = pial_rh[v_idx] * (1 - alpha) + white_rh[v_idx] * alpha
@@ -584,11 +568,10 @@ def improved_surface_to_volume_fixed(surface_data, vertices, pial_lh, pial_rh,
     return volume_4d, affine
 
 def windows_friendly_surface_projection(band_envelope, channel_coords):
-    """Windows'ta çalışan basit surface projection - düzeltilmiş"""
     log("Surface template yükleniyor...")
     fsaverage = datasets.fetch_surf_fsaverage('fsaverage5')
     
-    # Surface vertices al
+    # Get Surface vertices 
     lh_coords, lh_faces = surface.load_surf_mesh(fsaverage['pial_left'])
     rh_coords, rh_faces = surface.load_surf_mesh(fsaverage['pial_right'])
     
@@ -605,12 +588,12 @@ def windows_friendly_surface_projection(band_envelope, channel_coords):
     rh_coords_mni = np.array([(fs_to_mni @ np.append(v, 1))[:3] for v in rh_coords])
     all_vertices = np.vstack([lh_coords_mni, rh_coords_mni])
     
-    log(f"Toplam vertex sayısı: {len(all_vertices)}")
+    log(f"Total vertex count: {len(all_vertices)}")
     
     # Channel positions
     ch_positions = np.array(list(channel_coords.values()))
     
-    # Projeksiyon
+    # Projection
     n_vertices = len(all_vertices)
     n_timepoints = band_envelope.shape[1]
     surface_data = np.zeros((n_vertices, n_timepoints))
@@ -632,11 +615,9 @@ def windows_friendly_surface_projection(band_envelope, channel_coords):
     return surface_data, all_vertices, len(lh_coords)
 
 def surface_to_volume_simple(surface_data, vertices, volume_shape=(91, 109, 91), grid_spacing=2):
-    """Surface'den volume'a basit dönüşüm - düzeltilmiş"""
-    
+
     volume_4d = np.zeros((*volume_shape, surface_data.shape[1]))
     
-    # MNI affine - düzeltilmiş
     affine = np.array([
         [-2, 0, 0, 90],
         [0, 2, 0, -126], 
@@ -655,7 +636,6 @@ def surface_to_volume_simple(surface_data, vertices, volume_shape=(91, 109, 91),
             0 <= vox[1] < volume_shape[1] and
             0 <= vox[2] < volume_shape[2]):
             
-            # 2x2x2 komşuluk
             for dx in range(-1, 2):
                 for dy in range(-1, 2):
                     for dz in range(-1, 2):
@@ -673,19 +653,17 @@ def surface_to_volume_simple(surface_data, vertices, volume_shape=(91, 109, 91),
     return volume_4d, affine
 
 def save_surface_maps(surface_data, band_name, n_lh_vertices, output_path):
-    """Surface map'leri kaydet"""
     lh_data = surface_data[:n_lh_vertices]
     rh_data = surface_data[n_lh_vertices:]
     
     np.save(os.path.join(output_path, f'{band_name}_surface_lh.npy'), lh_data)
     np.save(os.path.join(output_path, f'{band_name}_surface_rh.npy'), rh_data)
     
-    log(f"Surface maps kaydedildi: {band_name}_surface_[lh/rh].npy")
+    log(f"Saved Surface Maps: {band_name}_surface_[lh/rh].npy")
 									
-# === ATLAS VE MASKELEME FONKSİYONLARI === #
+# === Atlas and Mask functions === #
 def apply_harvard_oxford_mask(voxel_coords):
-    """Harvard-Oxford atlas maskesi uygula"""
-    log("Harvard-Oxford atlas yükleniyor...")
+    log("Installing Harvard-Oxford atlas ...")
 
     ho_cort = datasets.fetch_atlas_harvard_oxford('cort-maxprob-thr25-2mm')
     ho_sub = datasets.fetch_atlas_harvard_oxford('sub-maxprob-thr25-2mm')
@@ -710,7 +688,7 @@ def apply_harvard_oxford_mask(voxel_coords):
 
     valid_voxels, valid_indices, voxel_labels, region_ids = [], [], [], []
 
-    for i, coord in enumerate(tqdm(voxel_coords, desc="Harvard-Oxford maskesi uygulanıyor")):
+    for i, coord in enumerate(tqdm(voxel_coords, desc="Applying Harvard-Oxford maskesi")):
         voxel_idx = np.round(inv_affine @ np.append(coord, 1))[:3].astype(int)
         if (0 <= voxel_idx[0] < atlas_data.shape[0] and
             0 <= voxel_idx[1] < atlas_data.shape[1] and
@@ -723,18 +701,18 @@ def apply_harvard_oxford_mask(voxel_coords):
                 region_ids.append(region_id)
 
     valid_voxels = np.array(valid_voxels)
-    log(f"Harvard-Oxford içindeki voxel sayısı: {len(valid_voxels)} / {len(voxel_coords)}")
+    log(f"Voxel Count in Harvard-Oxford: {len(valid_voxels)} / {len(voxel_coords)}")
 
     unique_regions, counts = np.unique(voxel_labels, return_counts=True)
-    log("En çok voxel içeren bölgeler:")
+    log("Areas has most voxel count:")
     for region, count in sorted(zip(unique_regions, counts), key=lambda x: x[1], reverse=True)[:10]:
         log(f"  {region}: {count} voxel")
 
     return valid_voxels, np.array(valid_indices), voxel_labels, region_ids, all_labels
 
 def apply_brain_mask(voxel_coords, grid_spacing):
-    """MNI152 beyin maskesi"""
-    log("Beyin maskesi yükleniyor...")
+    """MNI152 Brain mask"""
+    log("Applying Brain Mask  ...")
     
     mni_mask = datasets.load_mni152_brain_mask()
     mask_data = mni_mask.get_fdata()
@@ -743,7 +721,7 @@ def apply_brain_mask(voxel_coords, grid_spacing):
     brain_voxels = []
     brain_indices = []
     
-    for i, coord in enumerate(tqdm(voxel_coords, desc="Beyin maskesi uygulanıyor")):
+    for i, coord in enumerate(tqdm(voxel_coords, desc="Applying Brain Mask")):
         voxel_idx = np.round(np.linalg.inv(mask_affine) @ np.append(coord, 1))[:3].astype(int)
         
         if (0 <= voxel_idx[0] < mask_data.shape[0] and
@@ -755,91 +733,82 @@ def apply_brain_mask(voxel_coords, grid_spacing):
                 brain_indices.append(i)
     
     brain_voxels = np.array(brain_voxels)
-    log(f"Beyin içindeki voxel sayısı: {len(brain_voxels)} / {len(voxel_coords)}")
+    log(f"Voxel Count in Brain: {len(brain_voxels)} / {len(voxel_coords)}")
     
     return brain_voxels, np.array(brain_indices)
-# === VOXEL SIGNATURE VE MI/DICE HESAPLAMA === #
+# === VOXEL SIGNATURE and MI/DICE Calculation === #
 def compute_directional_voxel_signatures(voxel_coords, channel_coords, sigma=35, batch_size=5000, angle_exponent=0.5):
-    """EEG 10-10 sistemi için optimize edilmiş voxel signature hesaplama"""
     channel_names = list(channel_coords.keys())
     channel_vectors = np.stack([channel_coords[ch] for ch in channel_names])
     
-    log(f"\nEEG 10-10 Kanal Analizi:")
-    log(f"  Toplam kanal sayısı: {len(channel_vectors)}")
+    log(f"\nEEG 10-10 Channel Analyse:")
+    log(f"  Total Channel Count: {len(channel_vectors)}")
     log(f"  Sigma (spatial spread): {sigma}mm")
     
     n_voxels = len(voxel_coords)
     n_channels = len(channel_vectors)
     voxel_signatures = np.zeros((n_voxels, n_channels), dtype=np.float32)
     
-    # Voxel istatistikleri
+    # Voxel Statistics
     voxel_radii = np.linalg.norm(voxel_coords, axis=1)
-    log(f"\nVoxel istatistikleri:")
+    log(f"\nVoxel statistics:")
     log(f"  Toplam voxel: {n_voxels}")
-    log(f"  Ortalama voxel yarıçapı: {np.mean(voxel_radii):.1f}mm")
+    log(f"  Average voxel radius: {np.mean(voxel_radii):.1f}mm")
     
-    # Her voxel için hesapla
+    # Calculate for every voxel
     for i in tqdm(range(0, n_voxels, batch_size), desc="Voxel signatures"):
         end = min(i + batch_size, n_voxels)
         vxs = voxel_coords[i:end]
         
-        # Tüm kanallara olan mesafeler
         dists = np.linalg.norm(vxs[:, None, :] - channel_vectors[None, :, :], axis=2)
-        
-        # EEG için makul mesafe aralığında olan kanalları kullan
+
         for j, vox_idx in enumerate(range(i, end)):
             channel_dists = dists[j]
-            
-            # Sadece makul mesafedeki kanalları kullan
+
             valid_channels = (channel_dists >= MIN_CHANNEL_DISTANCE) & (channel_dists <= MAX_CHANNEL_DISTANCE)
             
             if np.any(valid_channels):
                 valid_dists = channel_dists[valid_channels]
                 
-                # Gaussian ağırlıklandırma
                 weights = np.exp(-valid_dists**2 / (2 * sigma**2))
                 
-                # Normalize et
                 weights /= np.sum(weights)
                 
-                # Signature'a ata
                 voxel_signatures[vox_idx, valid_channels] = weights
             else:
-                # Eğer hiç valid kanal yoksa en yakın 3 kanalı kullan
                 nearest_3 = np.argpartition(channel_dists, 3)[:3]
                 weights = np.exp(-channel_dists[nearest_3]**2 / (2 * sigma**2))
                 weights /= np.sum(weights)
                 voxel_signatures[vox_idx, nearest_3] = weights
     
-    # Signature kalitesi kontrolü
     signature_sums = np.sum(voxel_signatures, axis=1)
     zero_signatures = np.sum(signature_sums == 0)
     if zero_signatures > 0:
-        log(f"UYARI: {zero_signatures} voxel için signature hesaplanamadı!")
+        log(f"UYARI: {zero_signatures} can not calculate signature for voxel!")
     
     return voxel_signatures
 
 def compute_mi_dice_for_snapshot(voxel_sigs, snapshot, v_bins, t):
-    """Tek bir snapshot için MI ve Dice hesapla"""
+    """Calculate MI and Dice for one snapshot"""
     s_bins = np.histogram_bin_edges(snapshot, bins=n_bins)
     sb = np.digitize(snapshot, bins=s_bins)
     
     n_voxels = len(voxel_sigs)
     mi_results = np.zeros(n_voxels, dtype=np.float32)
     
-    # MI hesaplama
+    # MI calculation
     for i in range(n_voxels):
         vb = np.digitize(voxel_sigs[i], bins=v_bins[i])
         mi_results[i] = mutual_info_score(vb, sb)
     
-    # Dice hesaplama
+    # Dice calculation
     numerator = 2 * (voxel_sigs @ snapshot)
     norm_voxels = np.sum(voxel_sigs**2, axis=1)
     norm_snap = np.sum(snapshot**2)
     denominator = norm_voxels + norm_snap + 1e-8
     dice_results = numerator / denominator
     
-    # Min-max normalizasyonu (0-1 aralığına çek)
+    # Min-max normalization (0-1 aralığına çek)
     if np.max(mi_results) > np.min(mi_results):
         mi_norm = (mi_results - np.min(mi_results)) / (np.max(mi_results) - np.min(mi_results))
     else:
@@ -869,9 +838,8 @@ def process_snapshots_parallel(voxel_sigs, snapshots, v_bins, n_jobs=12):
         dice_scores[:, t] = dice
     
     return mi_scores, dice_scores
-# === CONN TOOLBOX VE ROI ANALİZ FONKSİYONLARI === #
+# === CONN TOOLBOX and ROI ANALİZ functions === #
 def create_conn_compatible_output(nii_img, band_name, region_labels, output_path):
-    """CONN toolbox için ROI tabanlı time series oluştur - DÜZELTİLMİŞ"""
     log("CONN toolbox uyumlu çıktı oluşturuluyor...")
     
     # Harvard-Oxford atlas ile ROI time series çıkar
