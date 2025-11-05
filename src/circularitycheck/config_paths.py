@@ -1,4 +1,3 @@
-# config_paths.py
 """
 SHARED PATH CONFIGURATION FOR VALIDATION SCRIPTS
 =================================================
@@ -364,4 +363,5 @@ REAL_PA_RATIOS = {
 if __name__ == "__main__":
     print_config()
     print()
+
     check_required_files()
