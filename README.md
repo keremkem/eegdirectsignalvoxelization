@@ -89,7 +89,8 @@ The materials are intended solely for academic and research purposes.
 
 Acknowledgments
 This work builds upon contributions from the SPIS Dataset (Sabancı University, Torkamani-Azar et al., 2020) and related open-source EEG processing frameworks.
-Special thanks to Kerem Kemik for methodological development and system integration.
+Special thanks to Kerem Kemik for methodological development and system integration. 
+Claude 4.5 Sonnet was used for vibecoding.
 
 “This code is a bridge between electric silence and hemodynamic rhythm—designed only for research, not for profit.”
 
