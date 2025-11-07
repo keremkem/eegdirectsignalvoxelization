@@ -1,7 +1,7 @@
 # EEG-fMRI Direct Signal Voxelization (v3.4)
 
 A validated research pipeline for projecting EEG scalp signals onto voxel-level 3D anatomical space, enabling frequency-resolved functional connectivity mapping across five canonical EEG bands (δ, θ, α, β, γ).  
-Developed by Dr. Kerem Kemik, in collaboration with Dr. Cansu Aykaç and colleagues (Izmir, Türkiye).
+Developed by Dr. Kerem Kemik, in collaboration with Dr. Cansu Aykaç (Izmir, Türkiye).
 
 ---
 
