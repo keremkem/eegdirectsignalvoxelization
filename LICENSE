@@ -1,111 +1,101 @@
-Non-Commercial Research and Educational Use License (NCR-EUL)
+# License
 
-Version 1.0 — 2025
+**Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**
 
-Project: EegDirectSignalVoxelization
-Authors: Kerem Kemik & Cansu Aykaç
-GitHub Username: keremkem
-Copyright © 2025
-
-Permission is hereby granted to any individual or organization to access, view, use, and modify the EegDirectSignalVoxelization software exclusively for non-commercial research and educational purposes, subject to the following terms:
-
-## 🛡️ Intellectual Property Notice
-
-The core methodology (MI-Dice hybrid voxelization framework) 
-represents novel intellectual property developed by:
-
-- Dr. Kerem Kemik (primary inventor)
-- Dr. Cansu Aykaç (co-developer)
-
-**Derivative Works Policy:**
-- Academic research: ✅ Freely permitted with citation
-- Commercial adaptation: ⚠️ Requires licensing (keremkemik9@gmail.com)
-- Defense/military: ⚠️ Explicit authorization required
-- Patent claims: ❌ Prior art established (2025-01-XX)
-
-This code is released under CC BY-NC 4.0, but underlying 
-methodological patents remain with the original authors.
----
-
-1. Permitted Uses
-
-You are allowed to:
-
-Use the software for academic research, scientific analysis, validations, or teaching activities.
-
-Modify, adapt, or extend the software for non-commercial research or educational purposes.
-
-Publish or present results produced using this software, provided proper attribution is given.
-
-
+Copyright © 2025 Dr. Kerem Kemik and Dr. Cansu Aykaç
 
 ---
 
-2. Attribution Requirement
+## Summary
 
-Any use, modification, or publication involving this software must include clear attribution to:
+This software is provided for **academic and educational use only**. 
+Commercial use requires explicit written permission from the authors.
 
-“EegDirectSignalVoxelization — Kerem Kemik & Cansu Aykaç (2025)”
+---
+
+## Permitted Uses
+
+You are free to:
+
+✅ **Use** the software for non-commercial research and education  
+✅ **Modify** and adapt the code for academic purposes  
+✅ **Share** the original or modified versions (with attribution)  
+✅ **Publish** results produced using this software
+
+---
+
+## Conditions
+
+### Attribution Required
+
+You must give appropriate credit:
+EEG-fMRI Direct Signal Voxelization Pipeline
+Kemik, K., & Aykaç, C. (2025)
+https://github.com/keremkem/eegdirectsignalvoxelization
 
 Attribution must appear in:
+- Academic papers and presentations
+- Derivative software documentation
+- Any redistributed versions
 
-Academic papers
+### Non-Commercial Use Only
 
-Presentations
+Commercial use is **prohibited** without prior written authorization.
 
-Derivative software headers (if applicable)
+**Commercial use includes:**
+- Integration into paid products or services
+- Use by for-profit organizations for commercial purposes
+- Use in proprietary or monetized applications
 
-Any redistributed versions (non-commercial)
-
-
-
----
-
-3. Non-Commercial Restriction
-
-Commercial use of this software is strictly prohibited without prior written permission from the authors.
-
-Commercial use includes, but is not limited to:
-
-Integration into paid products or services
-
-Use by companies or commercial entities
-
-Use in commercial R&D projects
-
-Use in any monetized application, system, or workflow
-
-
-To request commercial licensing, contact the authors directly via the GitHub profile keremkem.
-
+**To request commercial licensing:**  
+📧 keremkemik9@gmail.com
 
 ---
 
-4. Redistribution Conditions
+## Redistribution
 
-Redistribution of the original or modified software is permitted only if:
-
-The redistribution remains non-commercial,
-
-This license text stays intact and unaltered,
-
-Clear attribution to the authors is preserved.
-
-
+Redistribution is permitted if:
+1. This license remains intact
+2. Attribution is preserved
+3. Use remains non-commercial
 
 ---
 
-5. No Additional Restrictions
+## Disclaimer
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT.
 
-You may not impose further legal, digital, or technological restrictions that would limit the rights granted by this license.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+---
+
+## Full License Text
+
+This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+
+To view a copy of this license, visit:  
+https://creativecommons.org/licenses/by-nc/4.0/
+
+Or send a letter to:  
+Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 ---
 
-6. Disclaimer of Warranty
+## Contact
 
-This software is provided “AS IS,” without warranty of any kind, express or implied.
-The authors are not liable for any damages arising from the use or misuse of this software.
+**Dr. Kerem Kemik**  
+GitHub: keremkem  
+Email: keremkemik9@gmail.com
 
+For commercial licensing inquiries, academic collaborations, 
+or questions about this license, please contact the authors.
 
 ---
+
+**Version:** 1.0  
+**Effective Date:** November 2025
