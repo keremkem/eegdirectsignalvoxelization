@@ -93,6 +93,7 @@ If you use this repository, please cite:
 Kemik, K., Aykaç, C. (2025).
 EEG-fMRI Direct Signal Voxelization Pipeline (v3.4-dev).
 GitHub Repository: https://github.com/keremkem/eegdirectsignalvoxelization
+Vibecoded with Claude Sonnet v4.5.
 
 BibTeX:
 
