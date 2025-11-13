@@ -1,19 +1,198 @@
-# EEG-fMRI Direct Signal Voxelization (v3.4)
+EEG-fMRI Direct Signal Voxelization (v3.4)
 
-A validated research pipeline for projecting EEG scalp signals onto voxel-level 3D anatomical space, enabling frequency-resolved functional connectivity mapping across five canonical EEG bands (δ, θ, α, β, γ).  
-Developed by Dr. Kerem Kemik, in collaboration with Dr. Cansu Aykaç (Izmir, Türkiye).
+A validated research pipeline for projecting EEG scalp signals into voxel-level 3D anatomical space, enabling frequency-resolved functional connectivity mapping across five canonical EEG bands (δ, θ, α, β, γ).
+
+Developed by Dr. Kerem Kemik (GitHub: keremkem)
+in collaboration with Dr. Cansu Aykaç (İzmir, Türkiye)
+
 
 ---
 
-## Overview
+Overview
 
-This repository contains the full workflow and validation framework for the **EEG-to-voxel pipeline (v3.4)**.  
-The project bridges electrophysiological and hemodynamic domains by mapping EEG-derived oscillatory activity onto the MNI cortical surface using mutual-information and Dice-based hybrid scoring.
+This repository presents the complete methodological workflow and validation framework for the EEG-to-voxel direct signal projection pipeline (v3.4).
+The system bridges electrophysiology and hemodynamics by mapping EEG-derived oscillatory activity onto the MNI cortical surface using a Mutual-Information + Dice hybrid scoring model.
 
-Key features:
-- Frequency-specific voxelization (1–45 Hz, five canonical bands)
-- LOSO (Leave-One-Subject-Out) cross-validation
-- MI–Dice hybrid weighting for spatial correspondence
+This pipeline is designed exclusively for research and methodological development and is not intended for clinical or commercial use.
+
+
+---
+
+Key Features
+
+Frequency-specific voxelization (1–45 Hz; δ/θ/α/β/γ)
+
+LOSO (Leave-One-Subject-Out) cross-validation
+
+MI–Dice hybrid spatial correspondence weighting
+
+ICC-based test–retest reliability analysis
+
+Seven-tier circularity-control framework (SM3)
+
+Robust reproducibility backbone for EEG-to-fMRI translation research
+
+
+
+---
+
+Conceptual Note
+
+The statistical framework implemented here—particularly the MI–Dice hybridization—enables the definition of complex forms whose underlying structure can be inferred without direct interaction between multiple sensors and the object itself.
+This approach allows latent shapes or fields (e.g., a quantum sphere, a radar interaction volume, or abstract energy distributions) to be characterized through information-theoretic correspondences and spatial-consistency constraints, rather than physical contact.
+
+
+---
+
+Conceptual Applications
+
+Although the present pipeline is applied to EEG-to-brain mapping, the underlying methodology generalizes to a broader class of problems:
+
+Radar or sonar field reconstruction: inferring volumetric interaction zones from sparse multi-sensor correlations
+
+Quantum-field approximations: estimating latent geometric structures using non-linear information metrics
+
+Electromagnetic or acoustic shape inference: reconstructing hidden volumetric forms from distributed measurements
+
+Spatial coherence modeling in complex systems: identifying topologies where physical contact is limited or impossible
+
+
+The MI–Dice hybridization supplies the shape-defining signal, while LOSO generalization ensures the shape is real, not an artifact of any specific sensor or subject.
+
+
+---
+
+Citation
+
+If you use this repository, codebase, or methodology in academic work, please cite:
+
+Kemik, K.,Aykac, C.,et al. (2025).
+EEG-Derived Volumetric Connectivity: Establishing Frequency-Specific Reliability Baselines for Clinical Biomarker Development.
+(Under review)
+
+BibTeX
+
+@article{KEMİK2025eegvoxel,
+  author    = {Cansu Aykaç and Kerem Kemik and collaborators},
+  THIS PART WILL BE UPDATED UPON PUBLICATION
+  title     = {EEG-Derived Volumetric Connectivity: Establishing Frequency-Specific Reliability Baselines for Clinical Biomarker Development},
+  year      = {2025},
+  note      = {Under review}
+}
+
+
+---
+
+Method Summary
+
+Dataset
+
+SPIS Resting-State EEG Dataset (Torkamani-Azar et al., Sabancı University, 2020)
+
+N = 10 healthy adults
+
+BioSemi ActiveTwo, 64 electrodes (10–10 montage)
+
+
+Preprocessing
+
+1–45 Hz bandpass, 50 Hz notch
+
+Infomax ICA (FastICA; scikit-learn)
+
+Alpha-protection algorithm
+
+CSD transformation
+
+
+Voxelization
+
+~200,000 gray matter voxels (Harvard–Oxford mask)
+
+Geodesic Gaussian weighting (σ = 22 mm)
+
+Hemisphere isolation + normalization
+
+MI–Dice hybrid scoring
+
+
+Validation
+
+7-layer circularity-control framework
+
+ICC (2,k) reliability analyses
+
+LOSO generalization testing
+
+
+
+---
+
+File Structure
+
+/src        → Core voxelization scripts (Python)
+/data       → Sample EEG inputs (.mat)
+/results    → ICC, ROI, seed-to-voxel outputs
+/docs       → Supplementary methods (SM1–SM3)
+LICENSE     → Non-Commercial Research License
+README.md   → Documentation & usage policy
+
+
+---
+
+License & Usage Policy
+
+This repository is licensed under the:
+
+Non-Commercial Research and Educational Use License (NCR-EUL)
+
+© 2025 Kerem Kemik & Cansu Aykaç
+
+ Allowed
+
+Non-commercial academic and educational use
+
+Modification and extension for research
+
+Publication with proper attribution
+
+
+ Not Allowed
+
+Commercial use
+
+Diagnostic or clinical applications
+
+Proprietary or monetized software integration
+
+Redistribution without attribution and license retention
+
+
+Attribution Requirement
+
+Use of this repository must cite:
+
+“EegDirectSignalVoxelization — Kemik & Aykaç (2025)”
+
+Full License
+
+See the LICENSE file.
+
+Contact
+
+keremkemik9@gmail.com
+GitHub: keremkem
+
+
+---
+
+Acknowledgments
+
+This work builds upon the SPIS Dataset (Sabancı University, Torkamani-Azar et al., 2020) and open-source EEG processing frameworks.
+Also working on LEMON database for EEG fMRI validity. They will be published after successfull analysis. 
+This code was established with claude sonnet 4.5 vibecoding feature. 
+
+> “This code serves as a quantitative bridge between electric silence and hemodynamic rhythm—built for science, not for profit.”- MI–Dice hybrid weighting for spatial correspondence
 - ICC-based test–retest reliability analysis
 - Seven-tier validation against circularity bias (SM3)
 
