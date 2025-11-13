@@ -1,19 +1,96 @@
-Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+Non-Commercial Research and Educational Use License (NCR-EUL)
 
-Copyright (C) 2025 Dr. Kerem Kemik, Dr. Cansu Aykaç
+Version 1.0 — 2025
 
-This work is licensed under a Creative Commons
-Attribution-NonCommercial 4.0 International License.
+Project: EegDirectSignalVoxelization
+Authors: Kerem Kemik & Cansu Aykaç
+GitHub Username: keremkem
+Copyright © 2025
 
-You are free to:
-• Share — copy and redistribute the material in any medium or format
-• Adapt — remix, transform, and build upon the material
+Permission is hereby granted to any individual or organization to access, view, use, and modify the EegDirectSignalVoxelization software exclusively for non-commercial research and educational purposes, subject to the following terms:
 
-Under the following terms:
-• Attribution — You must give appropriate credit, provide a link to the license,
-  and indicate if changes were made.
-• NonCommercial — You may not use the material for commercial purposes.
-• No additional restrictions — You may not apply legal terms or technological
-  measures that legally restrict others from doing anything the license permits.
 
-Full license text: https://creativecommons.org/licenses/by-nc/4.0/
+---
+
+1. Permitted Uses
+
+You are allowed to:
+
+Use the software for academic research, scientific analysis, validations, or teaching activities.
+
+Modify, adapt, or extend the software for non-commercial research or educational purposes.
+
+Publish or present results produced using this software, provided proper attribution is given.
+
+
+
+---
+
+2. Attribution Requirement
+
+Any use, modification, or publication involving this software must include clear attribution to:
+
+“EegDirectSignalVoxelization — Kerem Kemik & Cansu Aykaç (2025)”
+
+Attribution must appear in:
+
+Academic papers
+
+Presentations
+
+Derivative software headers (if applicable)
+
+Any redistributed versions (non-commercial)
+
+
+
+---
+
+3. Non-Commercial Restriction
+
+Commercial use of this software is strictly prohibited without prior written permission from the authors.
+
+Commercial use includes, but is not limited to:
+
+Integration into paid products or services
+
+Use by companies or commercial entities
+
+Use in commercial R&D projects
+
+Use in any monetized application, system, or workflow
+
+
+To request commercial licensing, contact the authors directly via the GitHub profile keremkem.
+
+
+---
+
+4. Redistribution Conditions
+
+Redistribution of the original or modified software is permitted only if:
+
+The redistribution remains non-commercial,
+
+This license text stays intact and unaltered,
+
+Clear attribution to the authors is preserved.
+
+
+
+---
+
+5. No Additional Restrictions
+
+You may not impose further legal, digital, or technological restrictions that would limit the rights granted by this license.
+
+
+---
+
+6. Disclaimer of Warranty
+
+This software is provided “AS IS,” without warranty of any kind, express or implied.
+The authors are not liable for any damages arising from the use or misuse of this software.
+
+
+---
