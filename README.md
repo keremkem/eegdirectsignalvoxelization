@@ -1,303 +1,139 @@
-EEG-fMRI Direct Signal Voxelization (v3.4)
+# EEG-fMRI Direct Signal Voxelization (v3.4)
 
-A validated research pipeline for projecting EEG scalp signals into voxel-level 3D anatomical space, enabling frequency-resolved functional connectivity mapping across five canonical EEG bands (δ, θ, α, β, γ).
+> A computational pipeline for projecting EEG scalp signals onto voxel-level 3D brain space using hybrid information-theoretic methods.
 
-Developed by Dr. Kerem Kemik (GitHub: keremkem)
-in collaboration with Dr. Cansu Aykaç (İzmir, Türkiye)
-
-
+(https://github.com/keremkem/eegdirectsignalvoxelization)
+(https://www.python.org/)
+(https://creativecommons.org/licenses/by-nc/4.0/)
+**Developed by:** Dr. Kerem Kemik [keremkem](https://github.com/keremkem)  
+**In collaboration with:** Dr. Cansu Aykaç (İzmir, Türkiye)
 ---
+## 📊 Overview
+This repository implements a validated research pipeline for EEG-fMRI spatial integration, enabling frequency-resolved functional connectivity mapping across canonical EEG bands (δ, θ, α, β, γ).
 
-Overview
-
-This repository presents the complete methodological workflow and validation framework for the EEG-to-voxel direct signal projection pipeline (v3.4).
-The system bridges electrophysiology and hemodynamics by mapping EEG-derived oscillatory activity onto the MNI cortical surface using a Mutual-Information + Dice hybrid scoring model.
-
-This pipeline is designed exclusively for research and methodological development and is not intended for clinical or commercial use.
-
-## 🛡️ Intellectual Property & Patent Notice
-
-**Core Methodology:** MI-Dice Hybrid Voxelization Framework  
-**Inventors:** Dr. Kerem Kemik (primary) & Dr. Cansu Aykaç  
-**Prior Art Established:** January 2025  
-
-### Usage Rights:
-| Use Case | Status | Contact Required |
-|----------|--------|------------------|
-| 🎓 Academic Research | ✅ Permitted | Citation required |
-| 🏥 Clinical Research (non-commercial) | ✅ Permitted | Citation required |
-| 🏢 Commercial Applications | ⚠️ Restricted | keremkemik9@gmail.com |
-| 🎯 Defense/Military Systems | ⚠️ Restricted | keremkemik9@gmail.com |
-| 📱 Medical Device Integration | ⚠️ Restricted | keremkemik9@gmail.com |
-| 🔬 Patent Claims on Derivatives | ❌ Prohibited | Prior art established |
-
-**Patent Status:** Methods and apparatus for information-theoretic spatial inference from distributed sensors are subject to pending intellectual property protections.
-
-**License:** CC BY-NC 4.0 (code) + Proprietary methodological rights (inventors)
-
-📧 Licensing inquiries: keremkemik9@gmail.com
-
+The framework bridges electrophysiology and hemodynamics by mapping EEG-derived oscillatory activity onto MNI cortical space using a **Mutual Information + Dice hybrid scoring** approach with **Leave-One-Subject-Out (LOSO)** cross-validation.
+**Status:** Methodology complete. Large-scale validation (LEMON, N=40) in progress.
 ---
-
-Key Features
-
-Frequency-specific voxelization (1–45 Hz; δ/θ/α/β/γ)
-
-LOSO (Leave-One-Subject-Out) cross-validation
-
-MI–Dice hybrid spatial correspondence weighting
-
-ICC-based test–retest reliability analysis
-
-Seven-tier circularity-control framework (SM3)
-
-Robust reproducibility backbone for EEG-to-fMRI translation research
-
-
-
+## 🔬 Key Features
+- **Frequency-specific voxelization** (1–45 Hz across 5 canonical bands)
+- **MI-Dice hybrid scoring** (information-theoretic + spatial consistency)
+- **LOSO cross-validation** (subject-level generalization testing)
+- **ICC reliability analysis** (test-retest validation)
+- **7-tier circularity control** (spatial autocorrelation < 0.35)
+- **Modular Python implementation** (NumPy, SciPy, scikit-learn, MNE)
 ---
+## 🛠️ Method Summary
 
-Conceptual Note
+### Datasets
 
-The statistical framework implemented here—particularly the MI–Dice hybridization—enables the definition of complex forms whose underlying structure can be inferred without direct interaction between multiple sensors and the object itself.
-This approach allows latent shapes or fields (e.g., a quantum sphere, a radar interaction volume, or abstract energy distributions) to be characterized through information-theoretic correspondences and spatial-consistency constraints, rather than physical contact.
+**SPIS** (Torkamani-Azar et al., Sabancı University, 2020)
+- N = 10 healthy adults
+- Status: ✅ Analysis complete
+- Purpose: Pilot validation, circularity control (r = 0.33)
 
+**LEMON** (Babayan et al., Max Planck Institute, 2019)  
+- N = 40 subjects (selected from 227)
+- Status: ⏳ Validation in progress
+- Purpose: Cross-dataset generalization, large-scale reliability testing
+### Pipeline
+1. **Preprocessing**
+   - Bandpass: 1–45 Hz, notch: 50 Hz
+   - ICA artifact removal (FastICA)
+   - Alpha-protection algorithm (occipital rhythm preservation)
+   - Current Source Density (CSD) referencing
 
+2. **Voxelization**
+   - ~200,000 gray matter voxels (Harvard-Oxford atlas)
+   - Geodesic Gaussian weighting (σ = 22 mm)
+   - Hemisphere isolation + normalization
+   - **MI-Dice hybrid scoring:** α·MI(sensor→voxel) + β·Dice(sensor→voxel)
+
+3. **Validation**
+   - LOSO generalization (per-subject dropout)
+   - ICC(2,k) reliability analysis
+   - Circularity bias assessment (r < 0.35)
+   - 7-tier validation framework
 ---
-
-Conceptual Applications
-
-Although the present pipeline is applied to EEG-to-brain mapping, the underlying methodology generalizes to a broader class of problems:
-
-Radar or sonar field reconstruction: inferring volumetric interaction zones from sparse multi-sensor correlations
-
-Quantum-field approximations: estimating latent geometric structures using non-linear information metrics
-
-Electromagnetic or acoustic shape inference: reconstructing hidden volumetric forms from distributed measurements
-
-Spatial coherence modeling in complex systems: identifying topologies where physical contact is limited or impossible
-
-
-The MI–Dice hybridization supplies the shape-defining signal, while LOSO generalization ensures the shape is real, not an artifact of any specific sensor or subject.
-
-
+## 📁 Repository Structure
+├── src/ # Core voxelization algorithms (Python)
+├── utils/ # Helper functions, preprocessing tools
+├── data/ # Example data (MATLAB .mat format)
+├── results/ # Output templates (ICC maps, seed-to-voxel)
+├── docs/ # Supplementary methods (SM1-SM3)
+├── LICENSE # CC BY-NC 4.0
+├── CITATION.cff # Citation metadata
+└── README.md # This file
 ---
-
-Citation
-
-If you use this repository, codebase, or methodology in academic work, please cite:
-
-Kemik, K.,Aykac, C.,et al. (2025).
-EEG-Derived Volumetric Connectivity: Establishing Frequency-Specific Reliability Baselines for Clinical Biomarker Development.
-(Under review)
-
-BibTeX
-
-@article{KEMİK2025eegvoxel,
-  author    = {Cansu Aykaç and Kerem Kemik and collaborators},
-  THIS PART WILL BE UPDATED UPON PUBLICATION
-  title     = {EEG-Derived Volumetric Connectivity: Establishing Frequency-Specific Reliability Baselines for Clinical Biomarker Development},
-  year      = {2025},
-  note      = {Under review}
-}
-
-
----
-
-Method Summary
-
-Dataset
-
-SPIS Resting-State EEG Dataset (Torkamani-Azar et al., Sabancı University, 2020)
-
-N = 10 healthy adults
-
-BioSemi ActiveTwo, 64 electrodes (10–10 montage)
-
-
-Preprocessing
-
-1–45 Hz bandpass, 50 Hz notch
-
-Infomax ICA (FastICA; scikit-learn)
-
-Alpha-protection algorithm
-
-CSD transformation
-
-
-Voxelization
-
-~200,000 gray matter voxels (Harvard–Oxford mask)
-
-Geodesic Gaussian weighting (σ = 22 mm)
-
-Hemisphere isolation + normalization
-
-MI–Dice hybrid scoring
-
-
-Validation
-
-7-layer circularity-control framework
-
-ICC (2,k) reliability analyses
-
-LOSO generalization testing
-
-
-
----
-
-File Structure
-
-/src        → Core voxelization scripts (Python)
-/data       → Sample EEG inputs (.mat)
-/results    → ICC, ROI, seed-to-voxel outputs
-/docs       → Supplementary methods (SM1–SM3)
-LICENSE     → Non-Commercial Research License
-README.md   → Documentation & usage policy
-
-
----
-
-License & Usage Policy
-
-This repository is licensed under the:
-
-Non-Commercial Research and Educational Use License (NCR-EUL)
-
-© 2025 Kerem Kemik & Cansu Aykaç
-
- Allowed
-
-Non-commercial academic and educational use
-
-Modification and extension for research
-
-Publication with proper attribution
-
-
- Not Allowed
-
-Commercial use
-
-Diagnostic or clinical applications
-
-Proprietary or monetized software integration
-
-Redistribution without attribution and license retention
-
-
-Attribution Requirement
-
-Use of this repository must cite:
-
-“EegDirectSignalVoxelization — Kemik & Aykaç (2025)”
-
-Full License
-
-See the LICENSE file.
-
-Contact
-
-keremkemik9@gmail.com
-GitHub: keremkem
-
-
----
-
-Acknowledgments
-
-This work builds upon the SPIS Dataset (Sabancı University, Torkamani-Azar et al., 2020) and open-source EEG processing frameworks.
-Also working on LEMON database for EEG fMRI validity. They will be published after successfull analysis. 
-This code was established with claude sonnet 4.5 vibecoding feature. 
-
-> “This code serves as a quantitative bridge between electric silence and hemodynamic rhythm—built for science, not for profit.”- MI–Dice hybrid weighting for spatial correspondence
-- ICC-based test–retest reliability analysis
-- Seven-tier validation against circularity bias (SM3)
-
-This pipeline was designed for **methodological and research purposes** and is not intended for clinical or commercial use.
-
----
-
-## Citation
-
-If you use this repository, code, or methodology in academic work, please cite the forthcoming publication:
-
-> Aykaç, C., Kemik, K., et al. (2025). *EEG-Derived Volumetric Connectivity: Establishing Frequency-Specific Reliability Baselines for Clinical Biomarker Development.*  
-> Under review.
-
-Example BibTeX:
+## 📖 Citation
+If you use this code or methodology, please cite:
+Kemik, K., Aykaç, C., et al. (2025).
+EEG-Derived Volumetric Connectivity: Establishing
+Frequency-Specific Reliability Baselines for Clinical
+Biomarker Development. [Manuscript in preparation]
+
+**BibTeX:**
 ```bibtex
-@article{Aykac2025eegvoxel,
-  author    = {Cansu Aykaç and Kerem Kemik and collaborators},
-  title     = {EEG-Derived Volumetric Connectivity: Establishing Frequency-Specific Reliability Baselines for Clinical Biomarker Development},
+@software{Kemik2025voxelization,
+  author    = {Kerem Kemik and Cansu Aykaç},
+  title     = {EEG-fMRI Direct Signal Voxelization Pipeline},
   year      = {2025},
-  note      = {Under review}
+  version   = {3.4},
+  url       = {https://github.com/keremkem/eegdirectsignalvoxelization},
+  note      = {Manuscript in preparation}
 }
-Method Summary
-Dataset: SPIS Resting-State EEG Dataset (Torkamani-Azar et al., Sabancı University, 2020)
-Subjects: 10 healthy adults (N=10)
-System: BioSemi ActiveTwo (64 channels, 10-10 montage)
-Preprocessing:
+⚖️ License & Usage
+License: Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)
 
-1–45 Hz bandpass, 50 Hz notch
+✅ Permitted Uses:
+Academic and educational research
+Non-commercial neuroscience studies
+Methodological replication and extension
+Derivative works with attribution
+⚠️ Restricted Uses:
+Commercial applications (requires licensing agreement)
+Medical diagnostic devices (requires regulatory approval)
+Proprietary software integration
+🔐 Intellectual Property:
+This work establishes prior art for the MI-Dice-LOSO methodological combination (November 2025). Authors retain rights to commercial licensing and derivative patents.
 
-Infomax ICA (FastICA, scikit-learn)
+For commercial inquiries: keremkemik9@gmail.com
 
-Alpha-protection algorithm to preserve occipital rhythms
+🧠 Technical Details
+Core Innovation: MI-Dice Hybrid Framework with LOSO validation.
+Traditional approaches rely on single metrics:
 
-Current Source Density (CSD) re-referencing
-Voxelization:
+Source localization methods (LORETA/sLORETA): Inverse modeling with dipole assumptions
+Coherence-based methods: Sensor-space connectivity (no voxel projection)
+Spatial overlap only: No information-theoretic weighting
+Our approach combines:
 
-200k gray matter voxels, Harvard–Oxford atlas mask
+Mutual Information (MI): Information-theoretic correspondence
+Dice Coefficient: Spatial overlap consistency
+LOSO Validation: Subject-level generalization testing
+This hybrid framework provides robust spatial inference without inverse modeling assumptions.
 
-Geodesic Gaussian weighting (σ=22 mm)
+🤝 Acknowledgments
+SPIS Dataset: Torkamani-Azar et al., Sabancı University (2020)
+LEMON Dataset: Babayan et al., Max Planck Institute (2019)
+Open-source tools: MNE-Python, scikit-learn, nibabel
+Development assistance: Claude Sonnet 4.5 (Anthropic) for methodology validation and code optimization
+📧 Contact
+Dr. Kerem Kemik
+📧 keremkemik9@gmail.com
+🔗 GitHub: keremkem
 
-Hemisphere isolation and normalization
+📜 Development Notes
+Timeline:
 
-MI–Dice hybrid scoring for voxel projection
-Validation:
-
-7-tier anti-circularity framework
-
-ICC analysis for cross-method reliability
-
-LOSO generalization testing
-
-File Structure
-/src                → Core voxelization scripts (Python)
-/data               → Example EEG input files (MATLAB .mat)
-/results            → Group-level ICC, ROI, and seed-to-voxel outputs
-/docs               → Supplementary methods (SM1–SM3)
-LICENSE             → CC BY-NC 4.0 License
-README.md           → Documentation and usage policy
-License and Usage Policy
-This repository is licensed under the Creative Commons Attribution–NonCommercial 4.0 International License (CC BY-NC 4.0).
-The materials are intended solely for academic and research purposes.
-
-✅ You may copy, modify, and share the code for academic or educational work.
-
-❌ You may not use this repository or derivatives for commercial, diagnostic, or proprietary software.
-
-🧠 You must cite the original publication and retain this license notice in derivative works.
-
-📄 Full license text: CC BY-NC 4.0
-© 2025 Dr. Kerem Kemik and Dr. Cansu Aykaç
-✉️ Contact: keremkemik9@gmail.com
-
-Acknowledgments
-This work builds upon contributions from the SPIS Dataset (Sabancı University, Torkamani-Azar et al., 2020) and related open-source EEG processing frameworks.
-Claude 4.5 Sonnet was used for vibecoding.
-
-“This code is a bridge between electric silence and hemodynamic rhythm—designed only for research, not for profit.”
-
-## License
-This repository is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**.  
-The code and data are intended **solely for academic and research purposes**.  
-Commercial or clinical use requires explicit written permission from the author.  
-
-📄 License text: [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)  
-✉️ Contact: keremkemik9@gmail.com
-
+January 2025: Initial development 
+July 2025: MI-Dice hybrid framework
+September 2025: LOSO breakthrough (mature validation)
+October 2025: Research documentation complete
+November 2025: Public release, LEMON analysis ongoing
+Future Updates:
+ LEMON validation complete (Q4 2025)
+ Manuscript submission (Q1 2026)
+ Tutorial notebooks & documentation
+ Community contributions welcome (contact first)
+"This code serves as a quantitative bridge between electric silence and hemodynamic rhythm—built for science, not for profit."
+© 2025 Dr. Kerem Kemik & Dr. Cansu Aykaç | CC BY-NC 4.0 License
