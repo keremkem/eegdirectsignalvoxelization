@@ -1,0 +1,125 @@
+# ============================================
+# Python
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ============================================
+# Data Files (BÜYÜK/HASSAS)
+# ============================================
+
+# Raw EEG data
+*.edf
+*.bdf
+*.set
+*.fdt
+*.vhdr
+*.vmrk
+*.eeg
+*.dat
+
+# MATLAB files (büyük olabilir)
+*.mat
+data/*.mat
+raw_data/
+
+# NIfTI files (brain images)
+*.nii
+*.nii.gz
+results/*.nii
+results/*.nii.gz
+
+# Large result files
+*.hdf5
+*.h5
+*.pickle
+*.pkl
+
+# ============================================
+# Subject Data (Privacy)
+# ============================================
+
+# Subject-specific folders
+subjects/
+SPIS/
+LEMON/
+raw/
+derivatives/
+
+# Metadata that might contain IDs
+*_subjects.csv
+*_demographics.csv
+
+# ============================================
+# Temporary/Cache
+# ============================================
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Temporary processing
+temp/
+tmp/
+cache/
+
+# ============================================
+# Results (optional - include templates only)
+# ============================================
+
+# Uncomment if you want to exclude ALL results:
+# results/
+
+# Or keep templates but exclude actual data:
+results/*/*.nii.gz
+results/*/*.mat
+results/*/subject_*
+
+# ============================================
+# Documentation (keep templates)
+# ============================================
+
+# Exclude large PDFs/figures if any
+# *.pdf
+# figures/*.png
+
+# ============================================
+# Personal/Local
+# ============================================
+
+# Local config
+config_local.py
+secrets.py
+.env
+
+# Personal notes
+NOTES.md
+TODO_private.md
