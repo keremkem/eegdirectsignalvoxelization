@@ -84,17 +84,6 @@ This implementation is intended for **non-commercial academic neuroscience resea
 ⏳ Final ICC maps forthcoming  
 
 ---
-
-## 🧪 Example Usage (Minimal)
-
-```python
-from src.voxelize import compute_voxel_map
-from utils.preprocessing import preprocess_eeg
-
-eeg = preprocess_eeg("data/example_subject.mat")
-voxel_map = compute_voxel_map(eeg, band="alpha")
-
-voxel_map.save("results/alpha_voxels.nii.gz")
 Detailed usage will be added once LEMON validation is complete.
 
 📖 Citation
