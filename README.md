@@ -15,6 +15,27 @@ The system bridges electrophysiology and hemodynamics by mapping EEG-derived osc
 
 This pipeline is designed exclusively for research and methodological development and is not intended for clinical or commercial use.
 
+## 🛡️ Intellectual Property & Patent Notice
+
+**Core Methodology:** MI-Dice Hybrid Voxelization Framework  
+**Inventors:** Dr. Kerem Kemik (primary) & Dr. Cansu Aykaç  
+**Prior Art Established:** January 2025  
+
+### Usage Rights:
+| Use Case | Status | Contact Required |
+|----------|--------|------------------|
+| 🎓 Academic Research | ✅ Permitted | Citation required |
+| 🏥 Clinical Research (non-commercial) | ✅ Permitted | Citation required |
+| 🏢 Commercial Applications | ⚠️ Restricted | keremkemik9@gmail.com |
+| 🎯 Defense/Military Systems | ⚠️ Restricted | keremkemik9@gmail.com |
+| 📱 Medical Device Integration | ⚠️ Restricted | keremkemik9@gmail.com |
+| 🔬 Patent Claims on Derivatives | ❌ Prohibited | Prior art established |
+
+**Patent Status:** Methods and apparatus for information-theoretic spatial inference from distributed sensors are subject to pending intellectual property protections.
+
+**License:** CC BY-NC 4.0 (code) + Proprietary methodological rights (inventors)
+
+📧 Licensing inquiries: keremkemik9@gmail.com
 
 ---
 
