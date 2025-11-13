@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as follows."
+title: "EEG-fMRI Direct Signal Voxelization Pipeline"
+version: "3.4-dev"
+date-released: "2025-11-22"
+type: software
+
+abstract: >
+  A research-focused Python pipeline for projecting scalp EEG activity 
+  into voxel-level brain space using a hybrid mutual information and 
+  Dice coefficient framework combined with LOSO cross-validation. 
+  Intended for non-commercial academic neuroscience research.
+
+authors:
+  - family-names: "Kemik"
+    given-names: "Kerem"
+    email: "keremkemik9@gmail.com"
+    affiliation: "Neuroscience"
+  - family-names: "Aykaç"
+    given-names: "Cansu"
+    affiliation: "Clinical Neuropsychology"
+
+keywords:
+  - EEG
+  - fMRI
+  - voxelization
+  - mutual-information
+  - cross-validation
+  - neuroscience
+  - python
+
+license: "CC-BY-NC-4.0"
+repository-code: "https://github.com/keremkem/eegdirectsignalvoxelization"
+url: "https://github.com/keremkem/eegdirectsignalvoxelization"
+
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Kemik"
+      given-names: "Kerem"
+    - family-names: "Aykaç"
+      given-names: "Cansu"
+  title: "EEG-fMRI Direct Signal Voxelization Pipeline"
+  year: 2025
+  version: "3.4-dev"
+  repository-code: "https://github.com/keremkem/eegdirectsignalvoxelization"
+  note: "Academic research use only"
