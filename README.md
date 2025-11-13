@@ -31,14 +31,14 @@ This implementation is intended for **non-commercial academic neuroscience resea
 
 ## 📁 Repository Structure
 
-├── src/ # Core MI-Dice voxelization algorithms
-├── utils/ # Preprocessing + helper functions
-├── data/ # Example EEG matrices (sample subject)
-├── results/ # Output templates (NIfTI, ICC maps)
-├── docs/ # Supplementary documentation (WIP)
-├── LICENSE # CC BY-NC 4.0
-├── CITATION.cff # Citation metadata
-└── README.md # This file
+src/ # Core MI-Dice voxelization algorithms
+utils/ # Preprocessing + helper functions
+data/ # Example EEG matrices (sample subject)
+results/ # Output templates (NIfTI, ICC maps)
+docs/ # Supplementary documentation (WIP)
+LICENSE # CC BY-NC 4.0
+CITATION.cff # Citation metadata
+README.md # This file
 
 ---
 
@@ -93,12 +93,9 @@ If you use this repository, please cite:
 Kemik, K., Aykaç, C. (2025).
 EEG-fMRI Direct Signal Voxelization Pipeline (v3.4-dev).
 GitHub Repository: https://github.com/keremkem/eegdirectsignalvoxelization
-Vibecoded with Claude Sonnet v4.5.
 
+---
 BibTeX:
-
-bibtex
-Kodu kopyala
 @software{Kemik_Aykac_2025_voxelization,
   author    = {Kerem Kemik and Cansu Aykaç},
   title     = {EEG-fMRI Direct Signal Voxelization Pipeline},
@@ -107,6 +104,8 @@ Kodu kopyala
   url       = {https://github.com/keremkem/eegdirectsignalvoxelization},
   note      = {Academic research use only}
 }
+
+---
 ⚖️ License (Academic Use Only)
 This software is released under the Creative Commons
 Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) license.
@@ -128,6 +127,8 @@ Proprietary software integration
 Clinical or diagnostic use
 
 For commercial licensing inquiries: keremkemik9@gmail.com
+
+---
 
 👤 Authors
 Dr. Kerem Kemik
