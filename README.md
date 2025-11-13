@@ -146,6 +146,8 @@ Post-Doctoral Researcher — MD-PhD Neuroscience
 
 Dr. Cansu Aykaç - PsYD Neuropsychology
 
+Vibecoded with Claude Sonnet 4.5.
+
 🚧 Development Status
  Core MI–Dice algorithm
 
