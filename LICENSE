@@ -9,7 +9,22 @@ Copyright © 2025
 
 Permission is hereby granted to any individual or organization to access, view, use, and modify the EegDirectSignalVoxelization software exclusively for non-commercial research and educational purposes, subject to the following terms:
 
+## 🛡️ Intellectual Property Notice
 
+The core methodology (MI-Dice hybrid voxelization framework) 
+represents novel intellectual property developed by:
+
+- Dr. Kerem Kemik (primary inventor)
+- Dr. Cansu Aykaç (co-developer)
+
+**Derivative Works Policy:**
+- Academic research: ✅ Freely permitted with citation
+- Commercial adaptation: ⚠️ Requires licensing (keremkemik9@gmail.com)
+- Defense/military: ⚠️ Explicit authorization required
+- Patent claims: ❌ Prior art established (2025-01-XX)
+
+This code is released under CC BY-NC 4.0, but underlying 
+methodological patents remain with the original authors.
 ---
 
 1. Permitted Uses
