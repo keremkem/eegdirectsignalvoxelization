@@ -1,4 +1,5 @@
 # EEG-fMRI Direct Signal Voxelization (v3.4-dev)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17603484.svg)](https://doi.org/10.5281/zenodo.17603484)
 
 A research-oriented Python pipeline for mapping scalp EEG activity into 3D voxel-level brain space using a hybrid information-theoretic and spatial-consistency framework.
 
