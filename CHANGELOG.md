@@ -4,7 +4,7 @@ All notable changes to the EEG-fMRI Direct Signal Voxelization Pipeline are docu
 
 ---
 
-## [v5.1.0] — 2025 · "Frequency-Specific" (LEMON Dataset · Eyes-Open)
+## [v5.1.0] — 2026 · "Frequency-Specific" (LEMON Dataset · Eyes-Open)
 
 ### New Features
 - **Relative band power** (`hilbert_envelope_relative`): Replaces absolute Hilbert envelope. Normalizes each band's power by total broadband power, eliminating 1/f covariance artifacts that previously inflated cross-band correlations.
@@ -15,13 +15,13 @@ All notable changes to the EEG-fMRI Direct Signal Voxelization Pipeline are docu
 
 ### Bug Fixes
 - **Gamma spatial prior corrected**: Was mistakenly inheriting the alpha spatial prior (`center_y = -75`). Now uses a frequency-appropriate dual-peak prior (posterior visual + frontal cognitive). Affects all gamma-band voxel maps.
-- **HRF variance scaling removed**: Post-convolution variance normalization was incorrectly applied inside the pipeline. CONN/SPM handle normalization internally; double-scaling has been removed. Output NIfTI volumes are now fully CONN/SPM/FreeSurfer-compatible.
+- **HRF variance scaling removed**: Post-convolution variance normalization was incorrectly applied inside the pipeline. CONN/SPM handle normalization internally; double-scaling has been removed. Output NIfTI volumes are now fully CONN/SPM/FreeSurfer-compatible. User can change this option in HRF section. 
 - **HRF mmap edge padding added**: Memory-mapped HRF convolution path was missing edge padding, causing boundary artifacts in chunked z-slice processing. Fixed.
 
 ### Changes
 - **LOSO targets recalibrated**: All literature-derived validation targets (posterior/anterior alpha ratio, sensorimotor beta, frontal-midline theta, gamma posterior emphasis, anterior/posterior delta) recalibrated for the relative power scale. Absolute-power targets from v3.x/v4.x are no longer applicable.
 - **Dataset**: SPIS (N=10, eyes-closed) → **LEMON (N=40, eyes-open)**. Subject list updated accordingly (`sub-03230x_EO.mat` format).
-- **Sampling rate**: 256 Hz → **250 Hz** (LEMON dataset hardware).
+- **Sampling rate**: 256 Hz → **250 Hz** (LEMON dataset hardware). (User can change for database dependent in config)
 - **Cache version bumped to `v51`**: Incompatible with `cache_v40` and `cache_v50`. Old caches must be regenerated.
 - **Additional imports**: `csv`, `argparse`, `threading`, `zscore`, `rankdata`, `gaussian_filter`, `interp1d`, `LinearRegression`, `shutil` added to support new features.
 - **Codebase size**: ~2,890 → ~3,483 lines (+593 lines).
@@ -41,7 +41,7 @@ All notable changes to the EEG-fMRI Direct Signal Voxelization Pipeline are docu
 
 ---
 
-## [v3.3] — 2024 · Group K-fold Edition
+## [v3.3] — 2025 · Group K-fold Edition
 
 ### New Features
 - **Group-level K-fold optimization**: Pooled MI/Dice computation across all subjects before weight search, ensuring consistent `alpha` weights.
