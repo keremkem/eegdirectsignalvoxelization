@@ -12,18 +12,24 @@ A research-oriented Python pipeline for mapping scalp EEG activity into 3D voxel
 
 This repository provides an implementation of a **hybrid mutual information (MI) + Dice coefficient** scoring approach for estimating voxel-level EEG representations, combined with **Leave-One-Subject-Out (LOSO)** cross-validation and **ICC reliability** analyses.
 
-The pipeline enables frequency-specific spatial inference across canonical EEG bands (δ, θ, α, β, γ), with validation procedures designed to reduce circularity and improve generalizability.
+The pipeline enables frequency-specific spatial inference across canonical EEG bands (δ, θ, α, β, γ), with validation procedures designed to reduce circularity and improve generalizability. As of v5.1.0, band power is computed as relative power (normalized by total broadband power), eliminating 1/f covariance artifacts, and Dice similarity is computed on ranked activations, making scores amplitude-invariant. Output volumes are compatible with SPM, CONN, and FreeSurfer.
 
 ---
 
 ## 🔬 Key Features
 
-- **Hybrid MI–Dice scoring** for voxel-level EEG projection  
-- **LOSO cross-validation** for subject-level generalization  
-- **ICC(2,k) reliability analysis** for voxel-wise stability  
-- **7-step circularity control framework**  
-- **Frequency-specific mapping** (1–45 Hz)  
-- **Modular Python architecture** for research use  
+- **Hybrid MI–Dice scoring for voxel-level EEG projection
+- **Relative band power — eliminates 1/f broadband covariance (v5.1.0)
+- **Rank-based Dice similarity — amplitude-invariant voxel overlap (v5.1.0)
+- **LOSO cross-validation for subject-level generalization
+- **ICC(2,k) reliability analysis for voxel-wise stability
+- **7-step circularity control framework
+- **Frequency-specific mapping across δ, θ, α, β, γ (1–45 Hz)
+- **AR(1) prewhitening for temporal autocorrelation removal
+- **HRF convolution (Glover 1999 canonical; CONN/SPM-compatible normalization)
+- **CLI interface with argparse for scriptable batch processing
+- **Per-subject QC CSV export alongside NIfTI outputs
+- **Modular Python architecture for research use
 
 This implementation is intended for **non-commercial academic neuroscience research**.
 
@@ -48,29 +54,51 @@ README.md # This file
 - Bandpass filtering (1–45 Hz)
 - ICA artifact removal  
 - CSD transformation  
-- Hilbert envelope extraction  
+- Relative Hilbert envelope extraction (normalized by broadband power)
 - Epoching (2 s windows)
 
 ### 2. Voxelization
 - Gray-matter voxel grid (~200k voxels, MNI space)
-- Geodesic Gaussian weighting  
+- Geodesic Gaussian weighting (band-dependent sigma scaling) 
 - Hemisphere normalization  
 - **Hybrid score:**  
   \[
   H = \alpha \cdot MI + (1 - \alpha) \cdot Dice
   \]
+- Dice computed on ranked activations (amplitude-invariant, v5.1.0)
 
-### 3. Validation
-- **Leave-One-Subject-Out optimization**  
-- **ICC(2,k)** reliability maps  
-- **Circularity reduction** (noise-floor estimation, spatial boundary checks)  
+### 3. Post-processing
+- AR(1) prewhitening
+- Z-score normalization
+- HRF convolution (Glover canonical; no variance scaling — CONN-compatible)
+- Temporal consistency filtering
+- Raykill artifact cleanup
+
+### 4. Validation
+- Leave-One-Subject-Out (LOSO) weight optimization
+- ICC(2,k) reliability maps
+- Circularity reduction (noise-floor estimation, spatial boundary checks)
+- Literature-derived validation targets per band 
 
 ### 4. Output
-- Frequency-specific voxel maps  
-- Reliability volumes (NIfTI)  
-- Seed-to-voxel and ROI-level summaries  
+- Frequency-specific voxel maps (NIfTI)   
+- Reliability volumes 
+- Seed-to-voxel and ROI-level summaries
+- Per-subject QC metrics (CSV)
 
 ---
+
+💻 Usage
+bash# Basic run (all subjects, all bands)
+python eegclaudev5EO5.py
+
+# Skip AR(1) prewhitening for faster iteration
+python eegclaudev5EO5.py --no-ar1
+
+# Disable LOSO (group K-fold fallback)
+python eegclaudev5EO5.py --no-loso
+
+Full usage documentation will be added once LEMON validation is complete.
 
 ## 📊 Current Dataset Status
 
@@ -80,12 +108,11 @@ README.md # This file
 ✔ Circularity: r = 0.33  
 
 **LEMON Dataset (N=40)**  
-⏳ Validation in progress  
-⏳ LOSO weighting estimation  
+✔ Validation complete  
+✔ LOSO weighting estimation and Circularity r=0,4 
 ⏳ Final ICC maps forthcoming  
 
 ---
-Detailed usage will be added once LEMON validation is complete.
 
 📖 Citation
 If you use this repository, please cite:
@@ -141,14 +168,16 @@ Dr. Cansu Aykaç - PsYD Neuropsychology
 Vibecoded with Claude Sonnet 4.5.
 
 🚧 Development Status
- Core MI–Dice algorithm
 
- LOSO cross-validation module
+✅ Core MI–Dice algorithm
+✅ Relative band power & rank-based Dice (v5.1.0)
+✅ LOSO cross-validation module
+✅ AR(1) prewhitening
+✅ CONN/SPM/FreeSurfer-compatible HRF output
+✅ SPIS pilot validation (N=10)
+⏳ LEMON large-scale validation (N=40, ongoing)
+⏳ Manuscript submission (in preparation)
 
- SPIS pilot validation
+See CHANGELOG.md for full version history.
 
- LEMON large-scale validation (ongoing)
-
- Manuscript submission (in preparation)
-
-Last updated: November 2025
+Last updated: March 2026
