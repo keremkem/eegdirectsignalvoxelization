@@ -179,6 +179,10 @@ Vibecoded with Claude Sonnet 4.5.
 ⏳ LEMON large-scale validation (N=40, ongoing)
 ⏳ Manuscript submission (in preparation)
 
+Data Sources: 
+Data were obtained from the MPI-Leipzig Mind-Brain-Body (LEMON) dataset (Babayan et al., 2019; OpenNeuro accession ds000221). The first 40 participants of the young adult cohort were used (sub-032301 to sub-032342, excluding sub-032309 and sub-032335 due to data quality issues), all recorded during eyes-open resting state.
+Also : M. Torkamani-Azar, S. D. Kanik, S. Aydin and M. Cetin, "Prediction of Reaction Time and Vigilance Variability From Spatio-Spectral Features of Resting-State EEG in a Long Sustained Attention Task," in IEEE Journal of Biomedical and Health Informatics, vol. 24, no. 9, pp. 2550-2558, Sept. 2020, doi: 10.1109/JBHI.2020.2980056. https://ieeexplore.ieee.org/document/9034192 (https://github.com/mastaneht/SPIS-Resting-State-Dataset).
+
 See CHANGELOG.md for full version history.
 
 Last updated: March 2026
